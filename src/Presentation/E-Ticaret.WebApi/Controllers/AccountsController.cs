@@ -19,7 +19,7 @@ public class AccountsController : ControllerBase
 
     }
     // GET: api/<AccountsController>
-    [HttpGet]
+    [HttpGet("test-values")]
     public IEnumerable<string> Get()
     {
         return new string[] { "value1", "value2" };
@@ -33,7 +33,7 @@ public class AccountsController : ControllerBase
     }
 
     // POST api/<AccountsController>
-    [HttpPost]
+    [HttpPost("register")]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -43,7 +43,7 @@ public class AccountsController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -53,7 +53,7 @@ public class AccountsController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpPost]
+    [HttpPost("refresh-token")]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
@@ -65,7 +65,7 @@ public class AccountsController : ControllerBase
     }
 
 
-    [HttpGet]
+    [HttpGet("confirm-email")]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
@@ -88,7 +88,7 @@ public class AccountsController : ControllerBase
     {
     }
 
-    [HttpPost]
+    [HttpPost("send-reset-password-email")]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
@@ -102,7 +102,7 @@ public class AccountsController : ControllerBase
         return Ok(result.Message);
     }
 
-    [HttpPost]
+    [HttpPost("reset-password")]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
