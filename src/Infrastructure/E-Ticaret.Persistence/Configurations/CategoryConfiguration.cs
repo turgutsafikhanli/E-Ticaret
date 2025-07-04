@@ -16,6 +16,11 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasForeignKey(p => p.CategoryId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(c => c.MainCategory)
+               .WithMany(c => c.SubCategories)
+               .HasForeignKey(c => c.MainCategoryId)
+               .OnDelete(DeleteBehavior.Restrict);
     }
 }
 

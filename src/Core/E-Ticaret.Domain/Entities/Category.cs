@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace E_Ticaret.Domain.Entities;
+﻿namespace E_Ticaret.Domain.Entities;
 
 public class Category : BaseEntity
 {
     public string Name { get; set; } = null!;
+    public Guid? MainCategoryId { get; set; }
+    public Category? MainCategory { get; set; }
+    public ICollection<Category> SubCategories { get; set; }
 
     public ICollection<Product> Products { get; set; }
 }

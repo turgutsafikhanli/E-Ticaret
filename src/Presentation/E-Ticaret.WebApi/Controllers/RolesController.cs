@@ -1,4 +1,4 @@
-﻿using E_Ticaret.Application.Abstracts.Repositories;
+﻿using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.RoleDtos;
 using E_Ticaret.Application.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;

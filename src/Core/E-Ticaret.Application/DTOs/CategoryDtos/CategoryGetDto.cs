@@ -2,8 +2,7 @@
 
 public record class CategoryGetDto
 {
-    public string Name
-    { get; set; } = null!;
-    public Guid Id
-    { get; set; }
+    public string Name { get; set; } = null!;
+    public Guid Id { get; set; }
+    public Guid? MainCategoryId { get; set; }
 }

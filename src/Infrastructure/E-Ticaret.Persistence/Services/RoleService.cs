@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Security.Claims;
-using E_Ticaret.Application.Abstracts.Repositories;
+using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.RoleDtos;
 using E_Ticaret.Application.Shared;
 using E_Ticaret.Application.Shared.Helpers;

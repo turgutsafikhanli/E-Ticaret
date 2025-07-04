@@ -1,5 +1,4 @@
-﻿using E_Ticaret.Application.Abstracts.Repositories;
-using E_Ticaret.Application.Abstracts.Services;
+﻿using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Infrastructure.Services;
 using E_Ticaret.Persistence.Services;
 using Microsoft.Extensions.DependencyInjection;

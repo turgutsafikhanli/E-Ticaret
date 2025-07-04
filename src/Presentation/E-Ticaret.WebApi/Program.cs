@@ -1,5 +1,6 @@
 using E_Ticaret.Application.Shared.Helpers;
 using E_Ticaret.Application.Shared.Settings;
+using E_Ticaret.Application.Validations;
 using E_Ticaret.Domain.Entities;
 using E_Ticaret.Persistence.Contexts;
 using E_Ticaret.WebApi.Middlewares;
@@ -13,6 +14,7 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddValidatorsFromAssembly(typeof(CategoryCreateDtoValidator).Assembly);
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
