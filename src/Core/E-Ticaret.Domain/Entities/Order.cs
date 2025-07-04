@@ -2,9 +2,8 @@
 
 public class Order : BaseEntity
 {
-    public string UserId { get; set; }  // <-- string tipli
+    public string UserId { get; set; }
     public AppUser User { get; set; }
-
     public ICollection<OrderProduct> OrderProducts { get; set; }
 }
 

@@ -8,11 +8,11 @@ namespace E_Ticaret.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class FavouriteController : ControllerBase
+public class FavouritesController : ControllerBase
 {
     private readonly IFavouriteService _favouriteService;
 
-    public FavouriteController(IFavouriteService favouriteService)
+    public FavouritesController(IFavouriteService favouriteService)
     {
         _favouriteService = favouriteService;
     }
