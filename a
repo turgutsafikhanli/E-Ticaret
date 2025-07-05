@@ -1,0 +1,59 @@
+[33mcommit f0cec6e7c8f239f1dddb50e83a79351ef7a5dead[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mstaging[m[33m, [m[1;31morigin/staging[m[33m)[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Fri Jul 4 23:01:07 2025 +0400
+
+    Order service, repository, dto, validator, controller
+
+[33mcommit e6bcb06f5ad8591e561f322c1acf14a454c6adbd[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Fri Jul 4 18:34:20 2025 +0400
+
+    Favourite repository, service, dto, validator, controller
+
+[33mcommit 523c20d7e380c10c0b767e759c97a96f3581ec8f[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Fri Jul 4 18:00:40 2025 +0400
+
+    Category service, repository, controller, dto, validator
+
+[33mcommit 64f5edcd183261761e74290b6d3f07b14a2fcd48[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Fri Jul 4 02:13:28 2025 +0400
+
+    RoleService, register method bug fix, added roles,update register service
+
+[33mcommit 57e9e080bab95f07c27c268e0e3c914a3c8a3af4[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Wed Jul 2 20:33:51 2025 +0400
+
+    Create Database
+
+[33mcommit ef2751a6e6794f7fea05c49d3dc68d3b852580a8[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Wed Jul 2 01:09:10 2025 +0400
+
+    User(register/login/resetpassword) bug fix
+
+[33mcommit a3bf5438c2cadd67e9192c54842ad54248aa6b69[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Tue Jul 1 21:40:39 2025 +0400
+
+    Swagger bug fix
+
+[33mcommit 4067411389a35db82075930233dbad8ab4a92524[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Tue Jul 1 16:55:46 2025 +0400
+
+    User(login/register/resetpassword), EmailService, ExceptionHandlingMiddleware, Roles
+
+[33mcommit bcde5fc65f97d4b5025abc2df02edf0faf368838[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Tue Jul 1 04:00:34 2025 +0400
+
+    Connection string and tools
+
+[33mcommit a95b318e04ecb288150fcad03c7f964d7864de96[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: turgutsafikhanli <tsefixanli@gmail.com>
+Date:   Mon Jun 30 20:51:19 2025 +0400
+
+    Project Structure
