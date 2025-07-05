@@ -90,4 +90,18 @@ public static class Permissions
             GetMySales
         };
     }
+    public static class OrderProduct
+    {
+        public const string Create = "Permissions.OrderProduct.Create";
+        public const string Get = "Permissions.OrderProduct.Get";
+        public const string Update = "Permissions.OrderProduct.Update";
+        public const string Delete = "Permissions.OrderProduct.Delete";
+        public static List<string> All => new List<string>
+        {
+            Create,
+            Get,
+            Update,
+            Delete
+        };
+    }
 }

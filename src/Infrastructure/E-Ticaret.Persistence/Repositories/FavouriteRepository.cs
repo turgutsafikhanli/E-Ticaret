@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_Ticaret.Persistence.Repositories;
 
-public class FavoriteRepository : Repository<Domain.Entities.Favourite>, Application.Abstracts.Repositories.IFavouriteRepository
+public class FavouriteRepository : Repository<Domain.Entities.Favourite>, Application.Abstracts.Repositories.IFavouriteRepository
 {
     private readonly E_TicaretDbContext _context;
-    public FavoriteRepository(E_TicaretDbContext context) : base(context)
+    public FavouriteRepository(E_TicaretDbContext context) : base(context)
     {
     }
     public async Task<List<Domain.Entities.Favourite>> GetByAdIdAsync(Guid productId)

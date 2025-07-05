@@ -8,8 +8,10 @@ using AutoMapper;
 using E_Ticaret.Application.Abstracts.Repositories;
 using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.OrderDtos;
+using E_Ticaret.Application.DTOs.OrderProductDtos;
 using E_Ticaret.Application.Shared;
 using E_Ticaret.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Ticaret.Persistence.Services;
 
@@ -26,65 +28,171 @@ public class OrderService : IOrderService
 
     public async Task<BaseResponse<string>> CreateAsync(OrderCreateDto dto)
     {
-        var entity = _mapper.Map<Order>(dto);
-        await _orderRepository.AddAsync(entity);
-        await _orderRepository.SaveChangeAsync();
+        try
+        {
+            var order = new Order
+            {
+                UserId = dto.UserId
+            };
 
-        return new BaseResponse<string>("Sifariş yaradıldı", HttpStatusCode.Created);
+            await _orderRepository.AddAsync(order);
+            await _orderRepository.SaveChangeAsync();
+
+            return new BaseResponse<string>(HttpStatusCode.Created)
+            {
+                Data = order.Id.ToString(),
+                Message = "Order created successfully"
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<string>(HttpStatusCode.InternalServerError)
+            {
+                Success = false,
+                Message = $"Error creating order: {ex.Message}"
+            };
+        }
     }
 
     public async Task<BaseResponse<string>> DeleteAsync(Guid id)
     {
-        var order = await _orderRepository.GetByIdAsync(id);
-        if (order == null)
-            return new BaseResponse<string>("Sifariş tapılmadı", HttpStatusCode.NotFound);
+        try
+        {
+            var order = await _orderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return new BaseResponse<string>(HttpStatusCode.NotFound)
+                {
+                    Success = false,
+                    Message = "Order not found"
+                };
+            }
 
-        _orderRepository.Delete(order);
-        await _orderRepository.SaveChangeAsync();
+            _orderRepository.Delete(order);
+            await _orderRepository.SaveChangeAsync();
 
-        return new BaseResponse<string>("Sifariş silindi", HttpStatusCode.OK);
-    }
-
-    public async Task<BaseResponse<OrderGetDto>> GetByIdAsync(Guid id)
-    {
-        var order = await _orderRepository.GetByIdAsync(id);
-        if (order == null)
-            return new BaseResponse<OrderGetDto>("Sifariş tapılmadı", HttpStatusCode.NotFound);
-
-        var dto = _mapper.Map<OrderGetDto>(order);
-        return new BaseResponse<OrderGetDto>("Data", dto, HttpStatusCode.OK);
+            return new BaseResponse<string>(HttpStatusCode.OK)
+            {
+                Data = id.ToString(),
+                Message = "Order deleted successfully"
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<string>(HttpStatusCode.InternalServerError)
+            {
+                Success = false,
+                Message = $"Error deleting order: {ex.Message}"
+            };
+        }
     }
 
     public async Task<BaseResponse<List<OrderGetDto>>> GetAllAsync()
     {
-        var orders = _orderRepository.GetAll().ToList();
-        if (!orders.Any())
-            return new BaseResponse<List<OrderGetDto>>("Sifariş yoxdur", HttpStatusCode.NotFound);
+        try
+        {
+            var orders = _orderRepository.GetAll().ToList();
+            var dtos = _mapper.Map<List<OrderGetDto>>(orders);
 
-        var dtos = _mapper.Map<List<OrderGetDto>>(orders);
-        return new BaseResponse<List<OrderGetDto>>("Data", dtos, HttpStatusCode.OK);
+            return new BaseResponse<List<OrderGetDto>>(HttpStatusCode.OK)
+            {
+                Data = dtos
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<List<OrderGetDto>>(HttpStatusCode.InternalServerError)
+            {
+                Success = false,
+                Message = $"Error fetching orders: {ex.Message}"
+            };
+        }
+    }
+
+    public async Task<BaseResponse<OrderGetDto>> GetByIdAsync(Guid id)
+    {
+        try
+        {
+            var order = await _orderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return new BaseResponse<OrderGetDto>(HttpStatusCode.NotFound)
+                {
+                    Success = false,
+                    Message = "Order not found"
+                };
+            }
+
+            var dto = _mapper.Map<OrderGetDto>(order);
+            return new BaseResponse<OrderGetDto>(HttpStatusCode.OK)
+            {
+                Data = dto
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<OrderGetDto>(HttpStatusCode.InternalServerError)
+            {
+                Success = false,
+                Message = $"Error fetching order: {ex.Message}"
+            };
+        }
     }
 
     public async Task<BaseResponse<List<OrderGetDto>>> GetByUserIdAsync(string userId)
     {
-        var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
-        if (orders == null || !orders.Any())
-            return new BaseResponse<List<OrderGetDto>>("İstifadəçiyə aid sifariş tapılmadı", HttpStatusCode.NotFound);
+        try
+        {
+            var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
+            var dtos = _mapper.Map<List<OrderGetDto>>(orders);
 
-        var dtos = _mapper.Map<List<OrderGetDto>>(orders);
-        return new BaseResponse<List<OrderGetDto>>("Data", dtos, HttpStatusCode.OK);
+            return new BaseResponse<List<OrderGetDto>>(HttpStatusCode.OK)
+            {
+                Data = dtos
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<List<OrderGetDto>>(HttpStatusCode.InternalServerError)
+            {
+                Success = false,
+                Message = $"Error fetching orders for user: {ex.Message}"
+            };
+        }
     }
 
     public async Task<BaseResponse<string>> UpdateAsync(OrderUpdateDto dto)
     {
-        var order = await _orderRepository.GetByIdAsync(dto.Id);
-        if (order == null)
-            return new BaseResponse<string>("Sifariş tapılmadı", HttpStatusCode.NotFound);
+        try
+        {
+            var order = await _orderRepository.GetByIdAsync(dto.Id);
+            if (order == null)
+            {
+                return new BaseResponse<string>(HttpStatusCode.NotFound)
+                {
+                    Success = false,
+                    Message = "Order not found"
+                };
+            }
 
-        _mapper.Map(dto, order);
-        _orderRepository.Update(order);
-        await _orderRepository.SaveChangeAsync();
+            order.UserId = dto.UserId;
 
-        return new BaseResponse<string>("Sifariş yeniləndi", HttpStatusCode.OK);
+            _orderRepository.Update(order);
+            await _orderRepository.SaveChangeAsync();
+
+            return new BaseResponse<string>(HttpStatusCode.OK)
+            {
+                Data = order.Id.ToString(),
+                Message = "Order updated successfully"
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<string>(HttpStatusCode.InternalServerError)
+            {
+                Success = false,
+                Message = $"Error updating order: {ex.Message}"
+            };
+        }
     }
 }

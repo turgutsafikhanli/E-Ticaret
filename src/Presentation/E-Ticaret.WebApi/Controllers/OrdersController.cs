@@ -38,7 +38,15 @@ public class OrderController : ControllerBase
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> Put(Guid id, [FromBody] OrderUpdateDto dto)
     {
-        // Əgər lazım olsa id və dto.Id yoxlamaq olar, yoxsa sadəcə dto göndərilir
+        if (id != dto.Id)
+        {
+            return BadRequest(new BaseResponse<string>(HttpStatusCode.BadRequest)
+            {
+                Success = false,
+                Message = "ID mismatch between URL and body"
+            });
+        }
+
         var result = await _orderService.UpdateAsync(dto);
         return StatusCode((int)result.StatusCode, result);
     }

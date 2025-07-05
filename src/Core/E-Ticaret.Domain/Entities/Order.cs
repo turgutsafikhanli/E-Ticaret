@@ -2,8 +2,9 @@
 
 public class Order : BaseEntity
 {
-    public string UserId { get; set; }
-    public AppUser User { get; set; }
-    public ICollection<OrderProduct> OrderProducts { get; set; }
+    public string UserId { get; set; } = null!;
+    public AppUser User { get; set; } = null!;
+    public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
+
 }
 
