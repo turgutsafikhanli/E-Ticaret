@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_Ticaret.Persistence.Services;
 
-public class FavoriteService : IFavouriteService
+public class FavouriteService : IFavouriteService
 {
     IFavouriteRepository _favoriteRepository;
     IMapper _mapper;

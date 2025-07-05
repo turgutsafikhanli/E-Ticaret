@@ -14,6 +14,6 @@ public class Product : BaseEntity
 
     public ICollection<Image> Images { get; set; }
     public ICollection<Favourite> Favourites { get; set; }
-    public ICollection<OrderProduct> OrderProducts { get; set; }
+    public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 }
 
