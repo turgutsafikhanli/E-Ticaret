@@ -1,7 +1,11 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.UserDtos;
 using E_Ticaret.Application.Shared;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -115,4 +119,36 @@ public class AccountsController : ControllerBase
         }
         return Ok(result.Message);
     }
+
+    [HttpGet("google-login")]
+    public IActionResult GoogleLogin(string returnUrl = "/google-response")
+    {
+        var properties = new AuthenticationProperties
+        {
+            RedirectUri = Url.Action("GoogleResponse", "Accounts", new { returnUrl })
+        };
+        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+    }
+
+    [HttpGet("google-response")]
+    public async Task<IActionResult> GoogleResponse(string returnUrl = "/")
+    {
+        var result = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
+        if (!result.Succeeded)
+            return BadRequest("External authentication error");
+
+        var externalUser = result.Principal;
+        var email = externalUser?.FindFirst(ClaimTypes.Email)?.Value;
+        var name = externalUser?.FindFirst(ClaimTypes.Name)?.Value;
+
+        if (email is null)
+            return BadRequest("Google account has no email");
+
+        // İstifadəçini sistemə daxil et və ya qeydiyyatdan keçir
+        var tokenResponse = await _userService.HandleExternalLoginAsync(email, name);
+
+        // JWT token cavabı qaytar
+        return Ok(tokenResponse);
+    }
+
 }

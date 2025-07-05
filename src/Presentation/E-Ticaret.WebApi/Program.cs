@@ -57,6 +57,11 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    })
     .AddJwtBearer(options =>
     {
         options.RequireHttpsMetadata = false;
@@ -84,7 +89,6 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.Http,
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,

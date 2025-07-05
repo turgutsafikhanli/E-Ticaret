@@ -12,4 +12,5 @@ public interface IUserService
     Task<BaseResponse<string>> ConfirmEmail(string userId, string token);
     Task<BaseResponse<string>> SendResetPasswordEmailAsync(string email);
     Task<BaseResponse<string>> ResetPasswordAsync(UserResetPasswordDto dto);
+    Task<BaseResponse<TokenResponse>> HandleExternalLoginAsync(string email, string name);
 }

@@ -313,4 +313,27 @@ public class UserService : IUserService
         return new BaseResponse<string>("Password has been reset successfully.", HttpStatusCode.OK);
     }
 
+    public async Task<BaseResponse<TokenResponse>> HandleExternalLoginAsync(string email, string name)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+        {
+            user = new AppUser
+            {
+                UserName = email,
+                Email = email,
+                Fullname = name,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(user);
+            if (!result.Succeeded)
+                return new BaseResponse<TokenResponse>("User creation failed", HttpStatusCode.BadRequest);
+        }
+
+        // JWT token yarat
+        var token = await GenerateTokensAsync(user);
+        return new BaseResponse<TokenResponse>("Token generated", token , HttpStatusCode.OK);
+    }
 }
