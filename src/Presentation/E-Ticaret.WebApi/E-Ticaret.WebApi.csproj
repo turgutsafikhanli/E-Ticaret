@@ -34,4 +34,8 @@
     <ProjectReference Include="..\..\Infrastructure\E-Ticaret.Persistence\E-Ticaret.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
 </Project>
