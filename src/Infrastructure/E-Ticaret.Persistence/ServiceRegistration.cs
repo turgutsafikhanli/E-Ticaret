@@ -14,6 +14,7 @@ public static class ServiceRegistration
         services.AddScoped<IFavouriteRepository, FavouriteRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IOrderProductRepository, OrderProductRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
         #endregion
 
         #region Services
@@ -25,6 +26,7 @@ public static class ServiceRegistration
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IOrderProductService, OrderProductService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
+        services.AddScoped<IProductService, ProductService>();
         #endregion
     }
 }
