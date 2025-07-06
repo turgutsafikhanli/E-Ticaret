@@ -275,7 +275,6 @@ public class UserService : IUserService
         };
     }
 
-    // Şifrə sıfırlama üçün token yarat və email göndər
     public async Task<BaseResponse<string>> SendResetPasswordEmailAsync(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
@@ -335,5 +334,34 @@ public class UserService : IUserService
         // JWT token yarat
         var token = await GenerateTokensAsync(user);
         return new BaseResponse<TokenResponse>("Token generated", token , HttpStatusCode.OK);
+    }
+    public async Task<BaseResponse<string>> AddRole(UserRoleAssignDto dto)
+    {
+        var user = await _userManager.FindByIdAsync(dto.UserId);
+        if (user == null)
+            return new BaseResponse<string>("User not found.", HttpStatusCode.NotFound);
+
+        var roleNamesAdded = new List<string>();
+
+        foreach (var roleName in dto.RoleName.Distinct())
+        {
+            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (!roleExists)
+                return new BaseResponse<string>($"Role '{roleName}' not found.", HttpStatusCode.NotFound);
+
+            if (!await _userManager.IsInRoleAsync(user, roleName))
+            {
+                var result = await _userManager.AddToRoleAsync(user, roleName);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                    return new BaseResponse<string>($"Failed to add role '{roleName}' to user: {errors}", HttpStatusCode.BadRequest);
+                }
+                roleNamesAdded.Add(roleName);
+            }
+        }
+        return new BaseResponse<string>(
+            $"Successfully added roles: {string.Join(", ", roleNamesAdded)} to user.",
+            HttpStatusCode.OK);
     }
 }

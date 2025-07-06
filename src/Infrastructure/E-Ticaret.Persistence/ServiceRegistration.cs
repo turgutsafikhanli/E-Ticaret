@@ -24,6 +24,7 @@ public static class ServiceRegistration
         services.AddScoped<IFavouriteService, FavouriteService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IOrderProductService, OrderProductService>();
+        services.AddScoped<IFileUploadService, FileUploadService>();
         #endregion
     }
 }

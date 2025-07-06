@@ -1,7 +1,8 @@
 ﻿namespace E_Ticaret.Application.DTOs.OrderProductDtos;
 
-public class OrderProductCreateDto
+public record class OrderProductCreateDto
 {
+    public Guid OrderId { get; set; }
     public Guid ProductId { get; set; }
     public int Quantity { get; set; }
 }
