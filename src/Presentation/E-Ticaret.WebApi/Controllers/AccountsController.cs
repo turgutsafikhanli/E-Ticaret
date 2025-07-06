@@ -150,5 +150,10 @@ public class AccountsController : ControllerBase
         // JWT token cavabı qaytar
         return Ok(tokenResponse);
     }
-
+    [HttpPost("add-roles")]
+    public async Task<IActionResult> AddRolesToUser([FromBody] UserRoleAssignDto dto)
+    {
+        var result = await _userService.AddRole(dto);
+        return StatusCode((int)result.StatusCode, result);
+    }
 }

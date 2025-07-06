@@ -1,6 +1,7 @@
 ﻿using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.RoleDtos;
 using E_Ticaret.Application.Shared.Helpers;
+using E_Ticaret.Persistence.Services;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,14 +20,12 @@ public class RolesController : ControllerBase
     }
     // GET: api/<RolesController>
     [HttpGet("permissions")]
-
     public IActionResult GetAllPermissions()
     {
         var permissions = PermissionHelper.GetAllPermissions();
         return Ok(permissions);
 
     }
-
     [HttpPost]
     public async Task<IActionResult> CreateRole(RoleCreateDto dto)
     {

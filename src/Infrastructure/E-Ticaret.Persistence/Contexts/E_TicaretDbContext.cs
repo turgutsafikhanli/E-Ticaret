@@ -16,7 +16,7 @@ public class E_TicaretDbContext : IdentityDbContext<AppUser>
     public DbSet<Domain.Entities.Image> Images { get; set; }
     public DbSet<Favourite> Favourites { get; set; }
     public DbSet<Domain.Entities.Order> Orders { get; set; }
-    public DbSet<OrderProduct> OrderProducts { get; set; }
+    public DbSet<Domain.Entities.OrderProduct> OrderProducts { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(E_TicaretDbContext).Assembly);
