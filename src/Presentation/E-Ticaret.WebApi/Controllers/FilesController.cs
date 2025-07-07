@@ -1,5 +1,6 @@
 ﻿using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.FileUploadDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,6 +18,7 @@ public class FilesController : ControllerBase
     }
     // GET: api/<FilesController>
     [HttpGet]
+    [Authorize]
     public IEnumerable<string> Get()
     {
         return new string[] { "value1", "value2" };
@@ -24,6 +26,7 @@ public class FilesController : ControllerBase
 
     // GET api/<FilesController>/5
     [HttpGet("{id}")]
+    [Authorize]
     public string Get(int id)
     {
         return "value";
@@ -31,6 +34,7 @@ public class FilesController : ControllerBase
 
     // POST api/<FilesController>
     [HttpPost("upload")]
+    [Authorize]
     public async Task<IActionResult> Upload([FromForm] FileUploadDto dto)
     {
         if (dto.File == null || dto.File.Length == 0)
@@ -51,12 +55,14 @@ public class FilesController : ControllerBase
 
     // PUT api/<FilesController>/5
     [HttpPut("{id}")]
+    [Authorize]
     public void Put(int id, [FromBody] string value)
     {
     }
 
     // DELETE api/<FilesController>/5
     [HttpDelete("{id}")]
+    [Authorize]
     public void Delete(int id)
     {
     }

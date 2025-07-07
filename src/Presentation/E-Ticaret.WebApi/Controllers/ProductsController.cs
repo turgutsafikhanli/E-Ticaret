@@ -54,7 +54,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Policy = "Permissions.Product.Read")]
+    [Authorize(Policy = "Permissions.Product.Get")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await _productService.GetByIdAsync(id);
@@ -62,7 +62,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = "Permissions.Product.Read")]
+    [Authorize(Policy = "Permissions.Product.Get")]
     public async Task<IActionResult> GetAll()
     {
         var result = await _productService.GetAllAsync();
@@ -70,7 +70,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("user/{userId}")]
-    [Authorize(Policy = "Permissions.Product.Read")]
+    [Authorize(Policy = "Permissions.Product.Get")]
     public async Task<IActionResult> GetByUserId(string userId)
     {
         var result = await _productService.GetByUserIdAsync(userId);
@@ -78,7 +78,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("category/{categoryId:guid}")]
-    [Authorize(Policy = "Permissions.Product.Read")]
+    [Authorize(Policy = "Permissions.Product.Get")]
     public async Task<IActionResult> GetByCategoryId(Guid categoryId)
     {
         var result = await _productService.GetByCategoryIdAsync(categoryId);
@@ -86,7 +86,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("name/{name}")]
-    [Authorize(Policy = "Permissions.Product.Read")]
+    [Authorize(Policy = "Permissions.Product.Get")]
     public async Task<IActionResult> GetByName(string name)
     {
         var result = await _productService.GetByNameAsync(name);
@@ -94,7 +94,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("search")]
-    [Authorize(Policy = "Permissions.Product.Read")]
+    [Authorize(Policy = "Permissions.Product.Get")]
     public async Task<IActionResult> Search([FromQuery] string keyword)
     {
         var result = await _productService.SearchAsync(keyword);

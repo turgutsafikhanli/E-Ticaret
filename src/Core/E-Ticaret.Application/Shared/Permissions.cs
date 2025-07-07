@@ -76,26 +76,35 @@ public static class Permissions
         public const string Update = "Order.Update";
         public const string Delete = "Order.Delete";
         public const string View = "Order.View";
-        public const string GetMy = "Order.GetMy";
-        public const string GetDetail = "Order.GetDetail";
-        public const string GetMySales = "Order.GetMySales";
         public static List<string> All => new List<string>
         {
             Create,
+            GetAll,
             Update,
             Delete,
-            View,
-            GetMy,
-            GetDetail,
-            GetMySales
+            View
         };
     }
     public static class OrderProduct
     {
-        public const string Create = "Permissions.OrderProduct.Create";
-        public const string Get = "Permissions.OrderProduct.Get";
-        public const string Update = "Permissions.OrderProduct.Update";
-        public const string Delete = "Permissions.OrderProduct.Delete";
+        public const string Create = "OrderProduct.Create";
+        public const string Get = "OrderProduct.Get";
+        public const string Update = "OrderProduct.Update";
+        public const string Delete = "OrderProduct.Delete";
+        public static List<string> All => new List<string>
+        {
+            Create,
+            Get,
+            Update,
+            Delete
+        };
+    }
+    public static class Favourite
+    {
+        public const string Create = "Favourite.Create";
+        public const string Get = "Favourite.Get";
+        public const string Update = "Favourite.Update";
+        public const string Delete = "Favourite.Delete";
         public static List<string> All => new List<string>
         {
             Create,
