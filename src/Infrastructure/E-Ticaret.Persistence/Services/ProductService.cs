@@ -42,7 +42,8 @@ public class ProductService : IProductService
         {
             Name = dto.Name.Trim(),
             CategoryId = dto.CategoryId,
-            UserId = dto.UserId
+            UserId = dto.UserId,
+            Images = dto.ImageUrls.Select(url => new Image { ImageUrl = url }).ToList()
         };
 
         await _productRepository.AddAsync(product);

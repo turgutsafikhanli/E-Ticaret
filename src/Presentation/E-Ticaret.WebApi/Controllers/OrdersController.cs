@@ -52,7 +52,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Policy = "Permissions.Order.Read")]
+    [Authorize(Policy = "Permissions.Order.Get")]
     [ProducesResponseType(typeof(BaseResponse<OrderGetDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -63,7 +63,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = "Permissions.Order.Read")]
+    [Authorize(Policy = "Permissions.Order.Get")]
     [ProducesResponseType(typeof(BaseResponse<List<OrderGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -74,7 +74,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("user/{userId}")]
-    [Authorize(Policy = "Permissions.Order.Read")]
+    [Authorize(Policy = "Permissions.Order.Get")]
     [ProducesResponseType(typeof(BaseResponse<List<OrderGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]

@@ -14,7 +14,7 @@ public class E_TicaretDbContext : IdentityDbContext<AppUser>
     public DbSet<Domain.Entities.Product> Products { get; set; }
     public DbSet<Domain.Entities.Category> Categories { get; set; }
     public DbSet<Domain.Entities.Image> Images { get; set; }
-    public DbSet<Favourite> Favourites { get; set; }
+    public DbSet<Domain.Entities.Favourite> Favourites { get; set; }
     public DbSet<Domain.Entities.Order> Orders { get; set; }
     public DbSet<Domain.Entities.OrderProduct> OrderProducts { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

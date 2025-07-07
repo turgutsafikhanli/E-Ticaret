@@ -30,7 +30,7 @@ public class CategoryService : ICategoryService
         Category category = new()
         {
             Name = dto.Name.Trim(),
-
+            MainCategoryId = dto.MainCategoryId
         };
         await _categoryRepository.AddAsync(category);
         await _categoryRepository.SaveChangeAsync();

@@ -54,7 +54,7 @@ public class OrderProductsController : ControllerBase
     }
 
     [HttpGet("order/{orderId:guid}")]
-    [Authorize(Policy = "Permissions.OrderProduct.Read")]
+    [Authorize(Policy = "Permissions.OrderProduct.Get")]
     [ProducesResponseType(typeof(BaseResponse<List<OrderProductGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
