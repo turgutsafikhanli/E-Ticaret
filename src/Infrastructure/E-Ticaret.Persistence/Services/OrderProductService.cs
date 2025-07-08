@@ -10,6 +10,8 @@ using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.OrderProductDtos;
 using E_Ticaret.Application.Shared;
 using E_Ticaret.Domain.Entities;
+using E_Ticaret.Persistence.Repositories;
+using static E_Ticaret.Application.Shared.Permissions;
 
 namespace E_Ticaret.Persistence.Services;
 
@@ -28,7 +30,7 @@ public class OrderProductService : IOrderProductService
     {
         try
         {
-            var orderProduct = new OrderProduct
+            var orderProduct = new Domain.Entities.OrderProduct
             {
                 OrderId = orderId,
                 ProductId = dto.ProductId,
@@ -69,8 +71,7 @@ public class OrderProductService : IOrderProductService
                 };
             }
 
-            _orderProductRepository.Delete(orderProduct);
-            await _orderProductRepository.SaveChangeAsync();
+            await _orderProductRepository.SoftDeleteAsync(orderProduct);
 
             return new BaseResponse<string>(HttpStatusCode.OK)
             {

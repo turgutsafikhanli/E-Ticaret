@@ -1,5 +1,6 @@
 ﻿using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.FavouriteDtos;
+using E_Ticaret.Application.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ public class FavouritesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "Permissions.Favourite.Create")]
+    [Authorize(Policy = Permissions.Favourite.Create)]
     public async Task<IActionResult> Add([FromBody] FavouriteCreateDto dto)
     {
         var response = await _favouriteService.AddAsync(dto);
@@ -27,7 +28,7 @@ public class FavouritesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Policy = "Permissions.Favourite.Delete")]
+    [Authorize(Policy = Permissions.Favourite.Delete)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _favouriteService.DeleteAsync(id);
@@ -35,7 +36,7 @@ public class FavouritesController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Policy = "Permissions.Favourite.Update")]
+    [Authorize(Policy = Permissions.Favourite.Update)]
     public async Task<IActionResult> Update([FromBody] FavouriteUpdateDto dto)
     {
         var response = await _favouriteService.UpdateAsync(dto);
@@ -43,7 +44,7 @@ public class FavouritesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Policy = "Permissions.Favourite.Get")]
+    [Authorize(Policy = Permissions.Favourite.Get)]
     public async Task<IActionResult> GetById(Guid id)
     {
         var response = await _favouriteService.GetByIdAsync(id);
@@ -51,7 +52,7 @@ public class FavouritesController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = "Permissions.Favourite.Get")]
+    [Authorize(Policy = Permissions.Favourite.Get)]
     public async Task<IActionResult> GetAll()
     {
         var response = await _favouriteService.GetAllAsync();
@@ -59,7 +60,7 @@ public class FavouritesController : ControllerBase
     }
 
     [HttpGet("by-name")]
-    [Authorize(Policy = "Permissions.Favourite.Get")]
+    [Authorize(Policy = Permissions.Favourite.Get)]
     public async Task<IActionResult> GetByName([FromQuery] string search)
     {
         var response = await _favouriteService.GetByNameAsync(search);
@@ -67,7 +68,7 @@ public class FavouritesController : ControllerBase
     }
 
     [HttpGet("search")]
-    [Authorize(Policy = "Permissions.Favourite.Get")]
+    [Authorize(Policy = Permissions.Favourite.Get)]
     public async Task<IActionResult> GetByNameSearch([FromQuery] string namePart)
     {
         var response = await _favouriteService.GetByNameSearchAsync(namePart);

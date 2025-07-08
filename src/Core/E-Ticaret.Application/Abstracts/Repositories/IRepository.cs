@@ -20,4 +20,5 @@ public interface IRepository<T> where T : BaseEntity, new()
     Task AddAsync(T entity);
     void Update(T entity);
     void Delete(T entity);
+    Task SoftDeleteAsync(T entity);
 }

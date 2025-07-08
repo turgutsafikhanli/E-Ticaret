@@ -41,12 +41,21 @@ public class CategoryService : ICategoryService
     {
         var category = await _categoryRepository.GetByIdAsync(id);
         if (category is null)
-        {
             return new BaseResponse<string>("Category not found", HttpStatusCode.NotFound);
+
+        // Alt kateqoriya varsa silməyə icazə vermə
+        var hasSubCategories = _categoryRepository
+            .GetByFiltered(c => c.MainCategoryId == id && !c.IsDeleted)
+            .Any();
+
+        if (hasSubCategories)
+        {
+            return new BaseResponse<string>("This category has sub-categories and cannot be deleted", HttpStatusCode.BadRequest);
         }
-        _categoryRepository.Delete(category);
-        await _categoryRepository.SaveChangeAsync();
-        return new BaseResponse<string>("Category deleted successfully", HttpStatusCode.OK);
+
+        await _categoryRepository.SoftDeleteAsync(category);
+
+        return new BaseResponse<string>("Category soft-deleted successfully", HttpStatusCode.OK);
     }
 
     public async Task<BaseResponse<List<CategoryGetDto>>> GetAllAsync()
@@ -148,7 +157,7 @@ public class CategoryService : ICategoryService
             return new BaseResponse<CategoryTreeDto>("Main category not found", HttpStatusCode.NotFound);
         }
 
-        CategoryTreeDto BuildTree(Category category)
+        CategoryTreeDto BuildTree(Domain.Entities.Category category)
         {
             var dto = new CategoryTreeDto
             {

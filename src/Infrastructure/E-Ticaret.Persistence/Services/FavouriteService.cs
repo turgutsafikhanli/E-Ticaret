@@ -5,7 +5,9 @@ using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.FavouriteDtos;
 using E_Ticaret.Application.Shared;
 using E_Ticaret.Domain.Entities;
+using E_Ticaret.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using static E_Ticaret.Application.Shared.Permissions;
 
 namespace E_Ticaret.Persistence.Services;
 
@@ -24,7 +26,7 @@ public class FavouriteService : IFavouriteService
             return new BaseResponse<string>("Bu elan artıq favorilərdədir", HttpStatusCode.BadRequest);
         }
 
-        var entity = _mapper.Map<Favourite>(dto);
+        var entity = _mapper.Map<Domain.Entities.Favourite>(dto);
         await _favoriteRepository.AddAsync(entity);
         await _favoriteRepository.SaveChangeAsync();
 
@@ -39,8 +41,7 @@ public class FavouriteService : IFavouriteService
             return new BaseResponse<string>("Favori tapılmadı", HttpStatusCode.NotFound);
         }
 
-        _favoriteRepository.Delete(favorite);
-        await _favoriteRepository.SaveChangeAsync();
+        await _favoriteRepository.SoftDeleteAsync(favorite);
 
         return new BaseResponse<string>("Favori silindi", HttpStatusCode.OK);
     }
