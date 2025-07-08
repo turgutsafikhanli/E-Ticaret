@@ -11,7 +11,9 @@ using E_Ticaret.Application.DTOs.OrderDtos;
 using E_Ticaret.Application.DTOs.OrderProductDtos;
 using E_Ticaret.Application.Shared;
 using E_Ticaret.Domain.Entities;
+using E_Ticaret.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using static E_Ticaret.Application.Shared.Permissions;
 
 namespace E_Ticaret.Persistence.Services;
 
@@ -30,7 +32,7 @@ public class OrderService : IOrderService
     {
         try
         {
-            var order = new Order
+            var order = new Domain.Entities.Order
             {
                 UserId = dto.UserId
             };
@@ -68,8 +70,7 @@ public class OrderService : IOrderService
                 };
             }
 
-            _orderRepository.Delete(order);
-            await _orderRepository.SaveChangeAsync();
+            await _orderRepository.SoftDeleteAsync(order);
 
             return new BaseResponse<string>(HttpStatusCode.OK)
             {

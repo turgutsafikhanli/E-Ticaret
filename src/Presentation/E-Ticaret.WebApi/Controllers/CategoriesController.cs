@@ -41,6 +41,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet()]
+    [Authorize(Policy = Permissions.Category.Get)]
     [ProducesResponseType(typeof(BaseResponse<CategoryGetDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -53,10 +54,16 @@ public class CategoriesController : ControllerBase
     // DELETE api/<CategoriesController>/5
     [HttpDelete("{id}")]
     [Authorize(Policy = Permissions.Category.Delete)]
-    public void Delete(int id)
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> Delete(Guid id)
     {
+        var result = await _categoryService.DeleteAsync(id);
+        return StatusCode((int)result.StatusCode, result);
     }
     [HttpGet("search")]
+    [Authorize(Policy =Permissions.Category.Get)]
     [ProducesResponseType(typeof(BaseResponse<List<CategoryGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -77,6 +84,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("main-categories-with-tree")]
+    [Authorize(Policy = Permissions.Category.Get)]
     [ProducesResponseType(typeof(BaseResponse<List<CategoryGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]

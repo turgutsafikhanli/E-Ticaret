@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
 using E_Ticaret.Application.Abstracts.Repositories;
 using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.ProductDtos;
@@ -38,7 +32,7 @@ public class ProductService : IProductService
             );
         }
 
-        var product = new Product
+        var product = new Domain.Entities.Product
         {
             Name = dto.Name.Trim(),
             CategoryId = dto.CategoryId,
@@ -46,8 +40,7 @@ public class ProductService : IProductService
             Images = dto.ImageUrls.Select(url => new Image { ImageUrl = url }).ToList()
         };
 
-        await _productRepository.AddAsync(product);
-        await _productRepository.SaveChangeAsync();
+        await _productRepository.SoftDeleteAsync(product);
 
         return new BaseResponse<string>(HttpStatusCode.Created)
         {
@@ -95,7 +88,7 @@ public class ProductService : IProductService
     public async Task<BaseResponse<ProductGetDto>> GetByIdAsync(Guid id)
     {
         var product = await _productRepository
-            .GetByFiltered(p => p.Id == id, include: new[] { (Expression<Func<Product, object>>)(p => p.Images) })
+            .GetByFiltered(p => p.Id == id, include: new[] { (Expression<Func<Domain.Entities.Product, object>>)(p => p.Images) })
             .FirstOrDefaultAsync();
         if (product is null)
         {

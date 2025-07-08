@@ -109,5 +109,10 @@ public class Repository<T> : IRepository<T> where T : BaseEntity, new()
         await _context.SaveChangesAsync();
     }
 
-
+    public async Task SoftDeleteAsync(T entity)
+    {
+        entity.IsDeleted = true;
+        Table.Update(entity);
+        await _context.SaveChangesAsync();
+    }
 }

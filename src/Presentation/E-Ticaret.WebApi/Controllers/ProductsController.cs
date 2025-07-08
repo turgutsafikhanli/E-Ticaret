@@ -21,7 +21,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "Permissions.Product.Create")]
+    [Authorize(Policy = Permissions.Product.Create)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> Create([FromBody] ProductCreateDto dto)
     {
         var result = await _productService.CreateAsync(dto);
@@ -29,7 +32,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Policy = "Permissions.Product.Update")]
+    [Authorize(Policy = Permissions.Product.Update)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> Update(Guid id, [FromBody] ProductUpdateDto dto)
     {
         if (id != dto.Id)
@@ -46,7 +52,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Policy = "Permissions.Product.Delete")]
+    [Authorize(Policy = Permissions.Product.Delete)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var result = await _productService.DeleteAsync(id);
@@ -54,7 +63,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Policy = "Permissions.Product.Get")]
+    [Authorize(Policy = Permissions.Product.Get)]
+    [ProducesResponseType(typeof(BaseResponse<ProductGetDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await _productService.GetByIdAsync(id);
@@ -62,7 +74,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = "Permissions.Product.Get")]
+    [Authorize(Policy = Permissions.Product.Get)]
+    [ProducesResponseType(typeof(BaseResponse<List<ProductGetDto>>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> GetAll()
     {
         var result = await _productService.GetAllAsync();
@@ -70,7 +85,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("user/{userId}")]
-    [Authorize(Policy = "Permissions.Product.Get")]
+    [Authorize(Policy = Permissions.Product.Get)]
+    [ProducesResponseType(typeof(BaseResponse<List<ProductGetDto>>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetByUserId(string userId)
     {
         var result = await _productService.GetByUserIdAsync(userId);
@@ -78,7 +96,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("category/{categoryId:guid}")]
-    [Authorize(Policy = "Permissions.Product.Get")]
+    [Authorize(Policy = Permissions.Product.Get)]
+    [ProducesResponseType(typeof(BaseResponse<List<ProductGetDto>>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetByCategoryId(Guid categoryId)
     {
         var result = await _productService.GetByCategoryIdAsync(categoryId);
@@ -86,7 +107,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("name/{name}")]
-    [Authorize(Policy = "Permissions.Product.Get")]
+    [Authorize(Policy = Permissions.Product.Get)]
+    [ProducesResponseType(typeof(BaseResponse<ProductGetDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetByName(string name)
     {
         var result = await _productService.GetByNameAsync(name);
@@ -94,7 +118,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("search")]
-    [Authorize(Policy = "Permissions.Product.Get")]
+    [Authorize(Policy = Permissions.Product.Get)]
+    [ProducesResponseType(typeof(BaseResponse<List<ProductGetDto>>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> Search([FromQuery] string keyword)
     {
         var result = await _productService.SearchAsync(keyword);
