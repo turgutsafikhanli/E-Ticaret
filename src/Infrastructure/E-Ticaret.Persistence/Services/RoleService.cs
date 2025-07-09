@@ -47,5 +47,46 @@ public class RoleService : IRoleService
 
         return new BaseResponse<string?>("Role created successfully", true, HttpStatusCode.Created);
     }
+    public async Task<BaseResponse<bool>> DeleteRoleAsync(string roleName)
+    {
+        var role = await _roleManager.FindByNameAsync(roleName);
+        if (role == null)
+        {
+            return new BaseResponse<bool>("Rol tapılmadı.", false, HttpStatusCode.NotFound);
+        }
+
+        var result = await _roleManager.DeleteAsync(role);
+        if (!result.Succeeded)
+        {
+            return new BaseResponse<bool>("Rol silinərkən xəta baş verdi.", false, HttpStatusCode.InternalServerError);
+        }
+
+        return new BaseResponse<bool>("Rol uğurla silindi.", true, HttpStatusCode.OK);
+    }
+    public async Task<BaseResponse<bool>> UpdateRoleAsync(RoleUpdateDto dto)
+    {
+        var role = await _roleManager.FindByNameAsync(dto.RoleName);
+        if (role == null)
+            return new BaseResponse<bool>("Rol tapılmadı.", false, HttpStatusCode.NotFound);
+
+        // Mövcud səlahiyyətləri al
+        var existingClaims = await _roleManager.GetClaimsAsync(role);
+        var existingPermissionValues = existingClaims.Select(c => c.Value).ToHashSet();
+
+        // Yeni əlavə olunacaq səlahiyyətləri tap (əgər əvvəldən yoxdursa)
+        var newClaims = dto.NewPermissions
+            .Where(p => !existingPermissionValues.Contains(p))
+            .Select(p => new Claim("Permission", p))
+            .ToList();
+
+        foreach (var claim in newClaims)
+        {
+            var result = await _roleManager.AddClaimAsync(role, claim);
+            if (!result.Succeeded)
+                return new BaseResponse<bool>("Permission əlavə edilərkən xəta baş verdi.", false, HttpStatusCode.InternalServerError);
+        }
+
+        return new BaseResponse<bool>("Rol səlahiyyətləri uğurla yeniləndi.", true, HttpStatusCode.OK);
+    }
 
 }

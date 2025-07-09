@@ -58,6 +58,11 @@ public static class Permissions
         public const string Update = "Product.Update";
         public const string Delete = "Product.Delete";
         public const string Get = "Product.Get";
+        public const string GetAll = "Product.GetAll";
+        public const string GetByUserId = "Product.GetByUserId";
+        public const string GetByCategoryId = "Product.GetByCategoryId";
+        public const string GetByName = "Product.GetByName";
+        public const string GetMyProducts = "Product.GetMyProducts";
         public const string AddProductImage = "Product.AddImage";
         public const string DeleteImage = "Product.DeleteImage";
 
@@ -67,6 +72,11 @@ public static class Permissions
             Update,
             Delete,
             Get,
+            GetAll,
+            GetByUserId,
+            GetByCategoryId,
+            GetByName,
+            GetMyProducts,
             AddProductImage,
             DeleteImage
         };
