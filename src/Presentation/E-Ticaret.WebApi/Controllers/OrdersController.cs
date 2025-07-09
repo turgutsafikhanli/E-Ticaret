@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.OrderDtos;
+using E_Ticaret.Application.DTOs.OrderProductDtos;
 using E_Ticaret.Application.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,12 @@ namespace E_Ticaret.WebApi.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
+    private readonly IOrderProductService _orderProductService;
 
-    public OrderController(IOrderService orderService)
+    public OrderController(IOrderService orderService, IOrderProductService orderProductService)
     {
         _orderService = orderService;
+        _orderProductService = orderProductService;
     }
 
     [HttpPost]
@@ -31,7 +34,7 @@ public class OrderController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     [Authorize(Policy = "Permissions.Order.Update")]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
@@ -51,7 +54,7 @@ public class OrderController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet]
     [Authorize(Policy = "Permissions.Order.Get")]
     [ProducesResponseType(typeof(BaseResponse<OrderGetDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
@@ -62,7 +65,7 @@ public class OrderController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     [Authorize(Policy = "Permissions.Order.Get")]
     [ProducesResponseType(typeof(BaseResponse<List<OrderGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
@@ -73,7 +76,7 @@ public class OrderController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpGet("user/{userId}")]
+    [HttpGet("GetByUserId")]
     [Authorize(Policy = "Permissions.Order.Get")]
     [ProducesResponseType(typeof(BaseResponse<List<OrderGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
@@ -84,7 +87,7 @@ public class OrderController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpDelete("{id:guid}")]
+    [HttpDelete]
     [Authorize(Policy = "Permissions.Order.Delete")]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
@@ -94,4 +97,37 @@ public class OrderController : ControllerBase
         var result = await _orderService.DeleteAsync(id);
         return StatusCode((int)result.StatusCode, result);
     }
+
+    //[HttpPut("products")]
+    //[Authorize(Policy = "Permissions.OrderProduct.Update")]
+    //[ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
+    //[ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
+    //[ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
+    //public async Task<IActionResult> UpdateOrderProduct([FromBody] OrderProductUpdateDto dto)
+    //{
+    //    var result = await _orderProductService.UpdateAsync(dto);
+    //    return StatusCode((int)result.StatusCode, result);
+    //}
+
+    //[HttpDelete("products")]
+    //[Authorize(Policy = "Permissions.OrderProduct.Delete")]
+    //[ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
+    //[ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+    //[ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
+    //public async Task<IActionResult> DeleteOrderProduct([FromRoute] Guid orderId, [FromRoute] Guid productId)
+    //{
+    //    var result = await _orderProductService.DeleteAsync(orderId, productId);
+    //    return StatusCode((int)result.StatusCode, result);
+    //}
+
+    //[HttpGet("/products")]
+    //[Authorize(Policy = "Permissions.OrderProduct.Get")]
+    //[ProducesResponseType(typeof(BaseResponse<List<OrderProductGetDto>>), (int)HttpStatusCode.OK)]
+    //[ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
+    //[ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
+    //public async Task<IActionResult> GetOrderProducts([FromRoute] Guid orderId)
+    //{
+    //    var result = await _orderProductService.GetByOrderIdAsync(orderId);
+    //    return StatusCode((int)result.StatusCode, result);
+    //}
 }

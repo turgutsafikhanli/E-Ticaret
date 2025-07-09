@@ -12,41 +12,54 @@ namespace E_Ticaret.Persistence.Services;
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
+    private readonly IFileUploadService _fileUploadService;
 
-    public ProductService(IProductRepository productRepository)
+    public ProductService(IProductRepository productRepository, IFileUploadService fileUploadService)
     {
         _productRepository = productRepository;
+        _fileUploadService = fileUploadService;
     }
 
     public async Task<BaseResponse<string>> CreateAsync(ProductCreateDto dto)
     {
-        // Məhsul adının unikal olub-olmadığını yoxla
-        var exists = await _productRepository
-            .GetByFiltered(p => p.Name.Trim().ToLower() == dto.Name.Trim().ToLower())
-            .AnyAsync();
-        if (exists)
+        try
         {
-            return new BaseResponse<string>(
-                "A product with the same name already exists",
-                HttpStatusCode.BadRequest
-            );
+            var uploadedImageUrls = new List<string>();
+
+            if (dto.Images != null && dto.Images.Any())
+            {
+                foreach (var imageFile in dto.Images)
+                {
+                    var url = await _fileUploadService.UploadAsync(imageFile);
+                    uploadedImageUrls.Add(url);
+                }
+            }
+
+            var product = new Product
+            {
+                Name = dto.Name,
+                CategoryId = dto.CategoryId,
+                UserId = dto.UserId,
+                Images = uploadedImageUrls.Select(url => new Image { ImageUrl = url }).ToList()
+            };
+
+            await _productRepository.AddAsync(product);
+            await _productRepository.SaveChangeAsync();
+
+            return new BaseResponse<string>(HttpStatusCode.Created)
+            {
+                Data = product.Id.ToString(),
+                Message = "Product created successfully"
+            };
         }
-
-        var product = new Domain.Entities.Product
+        catch (Exception ex)
         {
-            Name = dto.Name.Trim(),
-            CategoryId = dto.CategoryId,
-            UserId = dto.UserId,
-            Images = dto.ImageUrls.Select(url => new Image { ImageUrl = url }).ToList()
-        };
-
-        await _productRepository.SoftDeleteAsync(product);
-
-        return new BaseResponse<string>(HttpStatusCode.Created)
-        {
-            Data = product.Id.ToString(),
-            Message = "Product created successfully"
-        };
+            return new BaseResponse<string>(HttpStatusCode.InternalServerError)
+            {
+                Success = false,
+                Message = $"Error creating product: {ex.Message}"
+            };
+        }
     }
 
     public async Task<BaseResponse<string>> DeleteAsync(Guid id)

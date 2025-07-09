@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using E_Ticaret.Application.Abstracts.Services;
 using E_Ticaret.Application.DTOs.ProductDtos;
 using E_Ticaret.Application.Shared;
@@ -14,19 +15,38 @@ namespace E_Ticaret.WebApi.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
+    private readonly IFileUploadService _fileUploadService;
 
-    public ProductsController(IProductService productService)
+    public ProductsController(IProductService productService, IFileUploadService fileUploadService)
     {
         _productService = productService;
+        _fileUploadService = fileUploadService;
     }
 
     [HttpPost]
     [Authorize(Policy = Permissions.Product.Create)]
-    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Create([FromBody] ProductCreateDto dto)
+    public async Task<IActionResult> Create([FromForm] ProductCreateDto dto)
     {
+        if (dto.Images == null || !dto.Images.Any())
+            return BadRequest(new BaseResponse<string>(HttpStatusCode.BadRequest)
+            {
+                Success = false,
+                Message = "No images provided"
+            });
+
+        var uploadedImageUrls = new List<string>();
+
+        foreach (var image in dto.Images)
+        {
+            var url = await _fileUploadService.UploadAsync(image);
+            uploadedImageUrls.Add(url);
+        }
+
+        dto.ImageUrls = uploadedImageUrls;
+
         var result = await _productService.CreateAsync(dto);
         return StatusCode((int)result.StatusCode, result);
     }
@@ -74,7 +94,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = Permissions.Product.Get)]
+    [Authorize(Policy = Permissions.Product.GetAll)]
     [ProducesResponseType(typeof(BaseResponse<List<ProductGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
@@ -84,8 +104,8 @@ public class ProductsController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpGet("user/{userId}")]
-    [Authorize(Policy = Permissions.Product.Get)]
+    [HttpGet("GetByUserId")]
+    [Authorize(Policy = Permissions.Product.GetByUserId)]
     [ProducesResponseType(typeof(BaseResponse<List<ProductGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -95,8 +115,8 @@ public class ProductsController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpGet("category/{categoryId:guid}")]
-    [Authorize(Policy = Permissions.Product.Get)]
+    [HttpGet("GetByCategoryId")]
+    [Authorize(Policy = Permissions.Product.GetByCategoryId)]
     [ProducesResponseType(typeof(BaseResponse<List<ProductGetDto>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -106,8 +126,8 @@ public class ProductsController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpGet("name/{name}")]
-    [Authorize(Policy = Permissions.Product.Get)]
+    [HttpGet("GetByName")]
+    [Authorize(Policy = Permissions.Product.GetByName)]
     [ProducesResponseType(typeof(BaseResponse<ProductGetDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
@@ -116,15 +136,20 @@ public class ProductsController : ControllerBase
         var result = await _productService.GetByNameAsync(name);
         return StatusCode((int)result.StatusCode, result);
     }
-
-    [HttpGet("search")]
-    [Authorize(Policy = Permissions.Product.Get)]
+    [HttpGet("my")]
+    [Authorize(Policy = Permissions.Product.GetMyProducts)]
     [ProducesResponseType(typeof(BaseResponse<List<ProductGetDto>>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.Unauthorized)]
     [ProducesResponseType(typeof(BaseResponse<string>), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Search([FromQuery] string keyword)
+    public async Task<IActionResult> GetMyProducts()
     {
-        var result = await _productService.SearchAsync(keyword);
+        var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new BaseResponse<string>("İstifadəçi identifikasiyası tapılmadı.", false, HttpStatusCode.Unauthorized));
+        }
+
+        var result = await _productService.GetByUserIdAsync(userId);
         return StatusCode((int)result.StatusCode, result);
     }
 }

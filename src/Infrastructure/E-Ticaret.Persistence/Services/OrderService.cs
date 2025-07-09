@@ -34,7 +34,8 @@ public class OrderService : IOrderService
         {
             var order = new Domain.Entities.Order
             {
-                UserId = dto.UserId
+                UserId = dto.UserId,
+                Status = dto.Status
             };
 
             await _orderRepository.AddAsync(order);
